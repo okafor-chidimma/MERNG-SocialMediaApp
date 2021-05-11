@@ -106,6 +106,14 @@ const Mutation = {
   },
   async createPost(_, { body }, context) {
     const user = checkAuth(context);
+    if (body.trim() === "") {
+      throw new UserInputError("Post body must not be empty", {
+        errors: {
+          postBody: "Post body must not be empty",
+        },
+      });
+    }
+
     const newPost = new Post({
       body,
       user: user.id,
@@ -115,7 +123,10 @@ const Mutation = {
     const post = await newPost.save();
     //at this point post === post_.doc but if you try to spread out post, you will see it has other properties
     //we are able to return post directly here unlike register resolver because everything we defined in our post schema is already in post.
-    console.log(post._doc, "post");
+    //console.log(post._doc, "post");
+    context.pubsub.publish("NEW_POST", {
+      newPost: post,
+    });
     return post;
   },
   async deletePost(_, { postId }, context) {
@@ -201,13 +212,13 @@ const Mutation = {
         // Not liked, like post
         post.likes.push({
           username,
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
         });
       }
 
       await post.save();
       return post;
-    } else throw new UserInputError('Post not found');
-  }
+    } else throw new UserInputError("Post not found");
+  },
 };
 export default Mutation;

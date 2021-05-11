@@ -1,4 +1,4 @@
-import { ApolloServer } from "apollo-server";
+import { ApolloServer, PubSub } from "apollo-server";
 import mongoose from "mongoose";
 
 import typeDefs from "./graphql/schema";
@@ -6,13 +6,14 @@ import Config from "../config";
 import resolvers from "./graphql/resolvers/index";
 
 const { MONGODB } = Config;
+const pubsub = new PubSub();
 //a context can accept an object directly or a function that returns an object
 //we use a function when we want to perform some logic.
 //context: ({req})=>({req})
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => ({ req }),
+  context: ({ req }) => ({ req, pubsub }),
 });
 
 //connect to db
