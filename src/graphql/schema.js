@@ -36,7 +36,8 @@ const typeDefs = gql`
     createdAt: String!
   }
   type Query {
-    getPosts: [Post!]!
+    getAllPostsFromServer: [Post!]!
+    getPostFromServer(postId: String!): Post
   }
   type Mutation {
     registerUser(registerUserInput: RegisterUserInput!): User!

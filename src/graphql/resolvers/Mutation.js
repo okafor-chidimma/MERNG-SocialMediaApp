@@ -34,7 +34,7 @@ const Mutation = {
     if (!valid) {
       throw new UserInputError("Errors", { errors });
     }
-
+    username = username.toLowerCase();
     const user = await User.findOne({ username });
 
     if (!user) {
@@ -73,6 +73,7 @@ const Mutation = {
       throw new UserInputError("Errors:", { errors });
     }
     //Make sure user does not exist
+    username = username.toLowerCase();
     const userExist = await User.findOne({ username });
     if (userExist) {
       //this throws a new error and passes a payloadObj which has the errors obj that will be consumed from the FE
