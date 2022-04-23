@@ -5,7 +5,7 @@ import { setContext } from "@apollo/client/link/context";
 import App from "../routes/App";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:5000/",
+  uri: "https://chidimma-merng-server.herokuapp.com/",
 });
 //this line sets up the token so the app does not need to add it every time it needs to make a request
 const authLink = setContext((_, { headers }) => {
